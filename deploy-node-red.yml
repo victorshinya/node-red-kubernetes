@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodered-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodered
+  template:
+    metadata:
+      labels:
+        app: nodered
+    spec:
+      containers:
+      - name: nodered
+        image: nodered/node-red:latest
+        resources:
+          limits:
+            memory: "1G"
+            cpu: "1.0"
+        ports:
+        - containerPort: 1880
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodered-service
+spec:
+  selector:
+    app: nodered
+  ports:
+  - protocol: TCP
+    port: 31880
+    targetPort: 1880
+  type: NodePort
